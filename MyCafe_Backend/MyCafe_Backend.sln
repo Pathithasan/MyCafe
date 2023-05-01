@@ -5,6 +5,8 @@ VisualStudioVersion = 25.0.1705.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCafe_Backend", "MyCafe_Backend\MyCafe_Backend.csproj", "{8B29BDB0-922A-4EA9-A47E-4E7048469705}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCafe_Shared", "MyCafe_Shared\MyCafe_Shared.csproj", "{EE84C5D5-77D8-45C6-B2DB-DC4A30844993}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8B29BDB0-922A-4EA9-A47E-4E7048469705}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B29BDB0-922A-4EA9-A47E-4E7048469705}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B29BDB0-922A-4EA9-A47E-4E7048469705}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE84C5D5-77D8-45C6-B2DB-DC4A30844993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE84C5D5-77D8-45C6-B2DB-DC4A30844993}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE84C5D5-77D8-45C6-B2DB-DC4A30844993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE84C5D5-77D8-45C6-B2DB-DC4A30844993}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
