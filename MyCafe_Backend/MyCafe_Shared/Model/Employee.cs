@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using MyCafe_Shared.Enum;
 
 namespace MyCafe_Shared.Model
 {

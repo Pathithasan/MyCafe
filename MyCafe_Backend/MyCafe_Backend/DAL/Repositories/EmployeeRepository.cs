@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
-using MyCafe_Shared.Enum;
 using MyCafe_Shared.Model;
 using MySql.Data.MySqlClient;
 
