@@ -23,7 +23,7 @@ namespace MyCafe_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CafeVM>>> GetAllCafees()
+        public async Task<ActionResult<List<CafeVM>>> GetAllCafes()
         {
             var cafes = await _cafeService.GetAllCafesWithEmployees();
             return Ok(cafes);
@@ -41,8 +41,8 @@ namespace MyCafe_Backend.Controllers
             return Ok(cafe);
         }
 
-        [HttpGet("{location}")]
-        public async Task<ActionResult<CafeVM>> GetCafeByLocation(string location)
+        [HttpGet]
+        public async Task<ActionResult<CafeVM>> GetCafes(string? location)
         {
             return Ok(await _cafeService.GetCafesByLocation(location));
         }
