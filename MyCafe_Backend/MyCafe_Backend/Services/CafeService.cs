@@ -2,6 +2,7 @@
 using MyCafe_Backend.DAL.Repositories;
 using MyCafe_Shared.Model;
 using System.Text.RegularExpressions;
+using MyCafe_Shared.ViewModel;
 
 namespace MyCafe_Backend.Services
 {
@@ -22,6 +23,24 @@ namespace MyCafe_Backend.Services
         public async Task<List<Cafe>> GetAllCafes()
         {
             return await _cafeRepository.GetAllCafes();
+        }
+
+        public async Task<List<CafeVM>> GetAllCafesWithEmployees()
+        {
+            return await _cafeRepository.GetCafesByLocation("");
+        }
+
+        public async Task<List<CafeVM>> GetCafesByLocation(string location)
+        {
+            if(location !="")
+            {
+                return await _cafeRepository.GetCafesByLocation(location); 
+            }
+            else
+            {
+                return new List<CafeVM>();
+            }
+            
         }
 
         public async Task<bool> AddCafe(Cafe cafe)

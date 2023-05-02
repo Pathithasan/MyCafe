@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyCafe_Backend.Services;
 using MyCafe_Shared.Model;
+using MyCafe_Shared.ViewModel;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,9 +23,9 @@ namespace MyCafe_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Cafe>>> GetAllCafees()
+        public async Task<ActionResult<List<CafeVM>>> GetAllCafees()
         {
-            var cafes = await _cafeService.GetAllCafes();
+            var cafes = await _cafeService.GetAllCafesWithEmployees();
             return Ok(cafes);
         }
 
@@ -38,6 +39,12 @@ namespace MyCafe_Backend.Controllers
                 return NotFound("Sorry, no cafe here. :/");
             }
             return Ok(cafe);
+        }
+
+        [HttpGet("{location}")]
+        public async Task<ActionResult<CafeVM>> GetCafeByLocation(string location)
+        {
+            return Ok(await _cafeService.GetCafesByLocation(location));
         }
 
         [HttpPost]

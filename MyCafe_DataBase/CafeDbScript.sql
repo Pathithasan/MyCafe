@@ -22,3 +22,23 @@ CREATE TABLE employee (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
+DELIMITER $$
+CREATE PROCEDURE get_cafes_by_location(IN location VARCHAR(255))
+BEGIN
+    IF location IS NULL OR location = '' THEN
+        SELECT c.name, c.description, COUNT(e.id) AS employees, c.logo, c.location, c.id
+        FROM cafe c
+        LEFT JOIN employee e ON c.id = e.cafe_id
+        GROUP BY c.id
+        ORDER BY employees DESC;
+    ELSE
+        SELECT c.name, c.description, COUNT(e.id) AS employees, c.logo, c.location, c.id
+        FROM cafe c
+        LEFT JOIN employee e ON c.id = e.cafe_id
+        WHERE c.location = location
+        GROUP BY c.id
+        ORDER BY employees DESC;
+    END IF;
+END$$
+DELIMITER ;

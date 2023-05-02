@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using MyCafe_Shared.Model;
+using MyCafe_Shared.ViewModel;
 
 namespace MyCafe_Backend.DAL.Repositories
 {
@@ -68,6 +69,39 @@ namespace MyCafe_Backend.DAL.Repositories
                         Location = reader.GetString("location"),
                         Description = reader.GetString("description"),
                         Logo = reader.GetString("logo"),
+                    });
+                }
+            }
+
+            await _connection.CloseAsync();
+
+            return cafes;
+        }
+
+        public async Task<List<CafeVM>>GetCafesByLocation(string location)
+        {
+            List<CafeVM> cafes = new List<CafeVM>();
+
+            await _connection.OpenAsync();
+
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = _connection;
+            command.CommandText = "get_cafes_by_location";
+            command.CommandType = CommandType.StoredProcedure;
+
+            command.Parameters.AddWithValue("@location", location);
+            using (var reader = await command.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    cafes.Add(new CafeVM
+                    {
+                        Id = reader.GetInt32("id"),
+                        Name = reader.GetString("name"),
+                        Location = reader.GetString("location"),
+                        Description = reader.GetString("description"),
+                        Logo = reader.GetString("logo"),
+                        Emplyees = reader.GetInt32("employees")
                     });
                 }
             }
