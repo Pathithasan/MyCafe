@@ -2,6 +2,7 @@
 using MyCafe_Backend.DAL.Repositories;
 using MyCafe_Shared.Model;
 using System.Text.RegularExpressions;
+using MyCafe_Shared.ViewModel;
 
 namespace MyCafe_Backend.Services
 {
@@ -23,6 +24,11 @@ namespace MyCafe_Backend.Services
             }
 
             return await _employeeRepository.GetEmployeeById(id);
+        }
+
+        public async Task<List<EmployeeVM>> GetEmployeesByCafe(string cafeName = "")
+        {
+            return await _employeeRepository.GetEmployeesByCafe(cafeName);
         }
 
         public async Task<List<Employee>> GetAllEmployees()
@@ -103,6 +109,8 @@ namespace MyCafe_Backend.Services
                 throw new ArgumentException($"A given cafe Id '{employee.CafeId}' is not found.");
             }
         }
+
+        
     }
 
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyCafe_Backend.Services;
 using MyCafe_Shared.Model;
+using MyCafe_Shared.ViewModel;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,9 +23,16 @@ namespace MyCafe_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Employee>>> GetAllEmployeees()
+        public async Task<ActionResult<List<EmployeeVM>>> GetAllEmployeees()
         {
-            var employees = await _employeeService.GetAllEmployees();
+            var employees = await _employeeService.GetEmployeesByCafe("");
+            return Ok(employees);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<EmployeeVM>>> GetEmployeees(string? cafe)
+        {
+            var employees = await _employeeService.GetEmployeesByCafe();
             return Ok(employees);
         }
 

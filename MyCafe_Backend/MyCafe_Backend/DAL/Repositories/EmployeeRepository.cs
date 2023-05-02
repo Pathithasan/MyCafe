@@ -2,7 +2,9 @@
 using System.Data;
 using System.Data.Common;
 using MyCafe_Shared.Model;
+using MyCafe_Shared.ViewModel;
 using MySql.Data.MySqlClient;
+using static Google.Protobuf.Reflection.SourceCodeInfo.Types;
 
 namespace MyCafe_Backend.DAL.Repositories
 {
@@ -43,6 +45,40 @@ namespace MyCafe_Backend.DAL.Repositories
             await _connection.CloseAsync();
 
             return employee;
+        }
+
+        public async Task<List<EmployeeVM>> GetEmployeesByCafe(string cafeName)
+        {
+            List<EmployeeVM> employees = new List<EmployeeVM>();
+
+            await _connection.OpenAsync();
+
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = _connection;
+            command.CommandText = "get_employees_by_cafe";
+            command.CommandType = CommandType.StoredProcedure;
+
+            command.Parameters.AddWithValue("@cafe_name", cafeName);
+            using (var reader = await command.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    employees.Add(new EmployeeVM
+                    {
+                        Id = reader.GetString("id"),
+                        Name = reader.GetString("name"),
+                        EmailAddress = reader.GetString("email_address"),
+                        DaysWorked = reader.GetInt32("days_worked"),
+                        PhoneNumber = reader.GetString("phone_number"),
+                        Cafe = reader.GetString("cafe")
+                        
+                    });
+                }
+            }
+
+            await _connection.CloseAsync();
+
+            return employees;
         }
 
         public async Task<List<Employee>> GetAllEmployees()
@@ -150,6 +186,8 @@ namespace MyCafe_Backend.DAL.Repositories
 
             return rowsAffected > 0;
         }
+
+       
     }
 
 }

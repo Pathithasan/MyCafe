@@ -23,6 +23,8 @@ CREATE TABLE employee (
     ON UPDATE CASCADE
 );
 
+ALTER TABLE employee MODIFY cafe_id int NULL;
+
 DELIMITER $$
 CREATE PROCEDURE get_cafes_by_location(IN location VARCHAR(255))
 BEGIN
@@ -39,6 +41,28 @@ BEGIN
         WHERE c.location = location
         GROUP BY c.id
         ORDER BY employees DESC;
+    END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE get_employees_by_cafe(IN cafe_name VARCHAR(255))
+BEGIN
+    IF cafe_name IS NULL OR cafe_name = '' THEN
+        SELECT e.id, e.name, e.email_address, e.phone_number,
+            DATEDIFF(CURDATE(), start_date) AS days_worked, 
+            c.name AS cafe
+        FROM employee e
+        LEFT JOIN cafe c ON e.cafe_id = c.id
+        ORDER BY days_worked DESC;
+    ELSE
+        SELECT e.id, e.name, e.email_address, e.phone_number,
+            DATEDIFF(CURDATE(), start_date) AS days_worked, 
+            c.name AS cafe
+        FROM employee e
+        LEFT JOIN cafe c ON e.cafe_id = c.id
+        WHERE c.name = cafe_name
+        ORDER BY days_worked DESC;
     END IF;
 END$$
 DELIMITER ;
