@@ -8,14 +8,19 @@ function reducer(state, action) {
             return {
                 ...state,
                 error: action.payload,
-            }
+            };
         case "SUCCESS":
             return {
                 ...state,
                 success: action.payload,
-            }
+            };
+        case "CAFE_DATA":
+            return {
+                ...state,
+                cafeData: [...action.payload],
+            };
         default:
-            return { ...state }
+            return { ...state };
     }
 }
 
@@ -23,7 +28,8 @@ const initialState = {
     error: "",
     success: "",
     loading: false,
-}
+    cafeData: [],
+};
 
 // Create a counter context, initally storing the initialState
 const Context = createContext(initialState)
