@@ -5,7 +5,7 @@ namespace MyCafe_Shared.ViewModel
 {
 	public class CafeVM: Cafe
 	{
-        public int Emplyees { get; set; }
+        public int Employees { get; set; }
     }
 }
 

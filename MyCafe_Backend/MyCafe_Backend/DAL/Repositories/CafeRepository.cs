@@ -101,7 +101,7 @@ namespace MyCafe_Backend.DAL.Repositories
                         Location = reader.GetString("location"),
                         Description = reader.GetString("description"),
                         Logo = reader.GetString("logo"),
-                        Emplyees = reader.GetInt32("employees")
+                        Employees = reader.GetInt32("employees")
                     });
                 }
             }
