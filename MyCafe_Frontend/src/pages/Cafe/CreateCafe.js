@@ -9,10 +9,8 @@ import { Context } from "../../context/store";
     const { state, dispatch } = useContext(Context);
     const [open, setOpen] = useState(false);
   
-    const { register, handleSubmit, reset, errors } = useForm({
-      
-    });
-  
+    // const { register, handleSubmit, reset, errors } = useForm();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const handleClickOpen = () => {
       setOpen(true);
     };
@@ -53,8 +51,8 @@ import { Context } from "../../context/store";
                             label="Name"
                             autoComplete="name"
                             autoFocus
+                            placeholder="Sips Cafe"
                             {...register("name")}
-                            defaultValue={"Sips Cafe"}
                         />
                         <TextField
                             variant="outlined"
@@ -65,7 +63,7 @@ import { Context } from "../../context/store";
                             label="Description"
                             autoComplete="description"
                             autoFocus
-                            defaultValue={"Soups and salads for the lunch crowd"}
+                            placeholder={"Soups and salads for the lunch crowd"}
                             {...register("description")}
                         />
                         <TextField
@@ -89,7 +87,7 @@ import { Context } from "../../context/store";
                             name="location"
                             autoComplete="location"
                             autoFocus
-                            defaultValue={"Crawford Ln, #01-63, Singapore"}
+                            placeholder={"Crawford Ln, #01-63, Singapore"}
                             {...register("location")}
                         />
                         
