@@ -23,14 +23,14 @@ namespace MyCafe_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<EmployeeVM>>> GetAllEmployeees()
+        public async Task<ActionResult<List<EmployeeVM>>> GetAllEmployees()
         {
             var employees = await _employeeService.GetEmployeesByCafe("");
             return Ok(employees);
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<EmployeeVM>>> GetEmployeees(string? cafe)
+        public async Task<ActionResult<List<EmployeeVM>>> GetEmployees(string? cafe)
         {
             var employees = await _employeeService.GetEmployeesByCafe();
             return Ok(employees);
@@ -49,11 +49,11 @@ namespace MyCafe_Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Employee>>> CreateEmployee(Employee employee)
+        public async Task<ActionResult<List<EmployeeVM>>> CreateEmployee(Employee employee)
         {
             if (await _employeeService.AddEmployee(employee))
             {
-                return Ok(await _employeeService.GetAllEmployees());
+                return Ok(await _employeeService.GetEmployeesByCafe());
             }
             else
             {
@@ -62,11 +62,11 @@ namespace MyCafe_Backend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<Employee>>> UpdateEmployee(Employee employee, string id)
+        public async Task<ActionResult<List<EmployeeVM>>> UpdateEmployee(Employee employee, string id)
         {
             if (await _employeeService.UpdateEmployee(employee, id))
             {
-                return Ok(await _employeeService.GetAllEmployees());
+                return Ok(await _employeeService.GetEmployeesByCafe());
             }
             else
             {
@@ -75,11 +75,11 @@ namespace MyCafe_Backend.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Employee>>> DeleteEmployee(string id)
+        public async Task<ActionResult<List<EmployeeVM>>> DeleteEmployee(string id)
         {
             if (await _employeeService.DeleteEmployee(id))
             {
-                return Ok(await _employeeService.GetAllEmployees());
+                return Ok(await _employeeService.GetEmployeesByCafe());
             }
             else
             {
