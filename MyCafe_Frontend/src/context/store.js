@@ -19,6 +19,11 @@ function reducer(state, action) {
                 ...state,
                 cafeData: [...action.payload],
             };
+        case "EMPLOYEE_DATA":
+            return {
+                ...state,
+                employeeData: [...action.payload],
+            }
         default:
             return { ...state };
     }
@@ -29,6 +34,7 @@ const initialState = {
     success: "",
     loading: false,
     cafeData: [],
+    employeeData: [],
 };
 
 // Create a counter context, initally storing the initialState
