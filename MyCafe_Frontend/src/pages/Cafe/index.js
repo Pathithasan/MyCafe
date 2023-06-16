@@ -8,7 +8,7 @@ import { Link as RouterLink } from "react-router-dom";
 import EditCafe from "./EditCafe";
 import DeleteCafe from "./DeleteCafe";
 import CreateCafe from "./CreateCafe";
-
+import './Index.css';
 
 const Cafe = () => {
     let apiData = useApiData();
@@ -24,6 +24,18 @@ const Cafe = () => {
         setRowData(state.cafeData);
     }, [state.cafeData]);
     
+     // Function to render the logo image as a preview
+    const renderLogoPreview = (params) => {
+        //const base64Logo = params.getValue("logo");
+        const base64Logo = params.value;
+        if (base64Logo) {
+        return <img 
+        src={base64Logo} 
+        alt="Logo" 
+        />;
+        }
+        return null;
+    };
     return (
         <Container maxWidth="xl">
             <Grid container spacing={2}>
@@ -40,10 +52,65 @@ const Cafe = () => {
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Box sx={{ height: 400, width: "100%" }}>
+                    <Box sx={{ height: 800, width: "100%" }}>
                         <DataGrid
                             rows={rowData}
-                            columns={columns}
+                            // columns={columns}
+                            columns={[
+                                //{ field: "id", headerName: "ID", width: 120 },
+                                {
+                                    field: "logo",
+                                    headerName: "Logo",
+                                    width: 120,
+                                    editable: false,
+                                    renderCell: renderLogoPreview, // Render the logo preview
+                                    cellClassName: 'logoCell',
+                                },
+                                {
+                                    field: "name",
+                                    headerName: "Name",
+                                    width: 150,          
+                                    editable: false,
+                                },
+                                {
+                                    field: "description",
+                                    headerName: "Description",
+                                    width: 250,
+                                    editable: false,
+                                },
+                               
+                                {
+                                    field: "location",
+                                    headerName: "Location",
+                                    width: 250,
+                                    editable: false,
+                                },
+                                {
+                                    field: "employees",
+                                    headerName: "Employees",
+                                    type: "number",
+                                    width: 120,
+                                    align: "left",
+                                    headerAlign: "left",
+                                    editable: false,
+                                },
+                                {
+                                    field: "action",
+                                    headerName: "Action",
+                                    width: 120,
+                                    sortable: false,
+                                    filterable: false,
+                                    disableClickEventBubbling: true,
+                                    renderCell: (params) => {
+                                        return (
+                                            <>
+                                                <EditCafe cafeData={params.row} />
+                                                <DeleteCafe cafeData={params.row} />
+                                            </>
+                                        );
+                                    },
+                                },
+                            ]}
                             initialState={{
                                 pagination: {
                                     paginationModel: {
@@ -67,55 +134,59 @@ const Cafe = () => {
 
 export default Cafe;
 
-const columns = [
-    { field: "id", headerName: "ID", width: 120 },
-    {
-        field: "name",
-        headerName: "Name",
-        width: 150,
-        editable: false,
-    },
-    {
-        field: "description",
-        headerName: "Description",
-        width: 150,
-        editable: false,
-    },
-    {
-        field: "logo",
-        headerName: "Logo",
-        width: 180,
-        editable: false,
-    },
-    {
-        field: "location",
-        headerName: "Location",
-        width: 120,
-        editable: false,
-    },
-    {
-        field: "employees",
-        headerName: "Employees",
-        type: "number",
-        width: 120,
-        editable: false,
-    },
-    {
-        field: "action",
-        headerName: "Action",
-        width: 120,
-        sortable: false,
-        filterable: false,
-        disableClickEventBubbling: true,
-        renderCell: (params) => {
-            return (
-                <>
-                    <EditCafe cafeData={params.row} />
-                    <DeleteCafe cafeData={params.row} />
-                </>
-            );
-        },
-    },
-];
+// const columns = [
+//     { field: "id", headerName: "ID", width: 120 },
+//     {
+//         field: "name",
+//         headerName: "Name",
+//         width: 150,
+//         editable: false,
+//     },
+//     {
+//         field: "description",
+//         headerName: "Description",
+//         width: 150,
+//         editable: false,
+//     },
+//     {
+//         field: "logo",
+//         headerName: "Logo",
+//         width: 180,
+//         editable: false,
+//         renderCell: renderLogoPreview, // Render the logo preview
+//     },
+//     {
+//         field: "location",
+//         headerName: "Location",
+//         width: 120,
+//         editable: false,
+//     },
+//     {
+//         field: "employees",
+//         headerName: "Employees",
+//         type: "number",
+//         width: 120,
+//         editable: false,
+//     },
+//     {
+//         field: "action",
+//         headerName: "Action",
+//         width: 120,
+//         sortable: false,
+//         filterable: false,
+//         disableClickEventBubbling: true,
+//         renderCell: (params) => {
+//             return (
+//                 <>
+//                     <EditCafe cafeData={params.row} />
+//                     <DeleteCafe cafeData={params.row} />
+//                 </>
+//             );
+//         },
+//     },
+// ];
+
+
+
 
 

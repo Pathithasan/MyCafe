@@ -2,10 +2,12 @@ import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import { useContext, useEffect, useMemo, useState } from "react";
 import DeleteForeverTwoTone from "@mui/icons-material/DeleteForeverTwoTone";
 import { useApiData } from "../../custom-hooks/useApiData";
+import { Context } from "../../context/store";
 
 const DeleteCafe = ({ cafeData }) => {
     let apiData = useApiData();
     const [open, setOpen] = useState(false);
+    const{state, dispatch} = useContext(Context);
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -17,6 +19,14 @@ const DeleteCafe = ({ cafeData }) => {
 
     function onSubmit(data) {
         const response = apiData.deleteCafe(cafeData?.id);
+        if(response)
+        {
+            alert(state.success);
+        }
+        else
+        {
+            alert(state.error);
+        }
         console.log("deleted------------->", response);
     }
 

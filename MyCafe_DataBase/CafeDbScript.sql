@@ -8,6 +8,7 @@ CREATE TABLE cafe (
   location VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
 );
+ALTER TABLE cage MODIFY logo MEDIUMBLOB NULL;
 
 CREATE TABLE employee (
   id CHAR(9) NOT NULL,

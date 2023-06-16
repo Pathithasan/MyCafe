@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using MyCafe_Shared.Model;
 using MyCafe_Shared.ViewModel;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MyCafe_Backend.DAL.Repositories
 {
@@ -32,14 +34,19 @@ namespace MyCafe_Backend.DAL.Repositories
             {
                 if (await reader.ReadAsync())
                 {
-                    cafe = new Cafe
+                    cafe = new Cafe();
+                    cafe.Id = reader.GetInt32("id");
+                    cafe.Name = reader.GetString("name");
+                    cafe.Location = reader.GetString("location");
+                    cafe.Description = reader.GetString("description");
+
+                    if (!reader.IsDBNull(reader.GetOrdinal("logo")))
                     {
-                        Id = reader.GetInt32("id"),
-                        Name = reader.GetString("name"),
-                        Location = reader.GetString("location"),
-                        Description = reader.GetString("description"),
-                        Logo = reader.GetString("logo"),
-                    };
+                        long logoSize = reader.GetBytes(reader.GetOrdinal("logo"), 0, null, 0, 0);
+                        byte[] logoData = new byte[logoSize];
+                        reader.GetBytes(reader.GetOrdinal("logo"), 0, logoData, 0, (int)logoSize);
+                        cafe.Logo = Encoding.UTF8.GetString(logoData);
+                    }
                 }
             }
 
@@ -62,14 +69,25 @@ namespace MyCafe_Backend.DAL.Repositories
             {
                 while (await reader.ReadAsync())
                 {
-                    cafes.Add(new Cafe
+                    Cafe cafe = new Cafe();
+
+                    cafe.Id = reader.GetInt32("id");
+                    cafe.Name = reader.GetString("name");
+                    cafe.Location = reader.GetString("location");
+                    cafe.Description = reader.GetString("description");
+                       
+                    if (!reader.IsDBNull(reader.GetOrdinal("logo")))
                     {
-                        Id = reader.GetInt32("id"),
-                        Name = reader.GetString("name"),
-                        Location = reader.GetString("location"),
-                        Description = reader.GetString("description"),
-                        Logo = reader.GetString("logo"),
-                    });
+                        long logoSize = reader.GetBytes(reader.GetOrdinal("logo"), 0, null, 0, 0);
+                        byte[] logoData = new byte[logoSize];
+                        reader.GetBytes(reader.GetOrdinal("logo"), 0, logoData, 0, (int)logoSize);
+                        //cafe.Logo= Convert.ToBase64String(logoData);
+                        //cafe.Logo = Encoding.ASCII.GetString(logoData);
+                        cafe.Logo = Encoding.UTF8.GetString(logoData);
+                    }
+
+                    cafes.Add(cafe);
+                    
                 }
             }
 
@@ -94,15 +112,21 @@ namespace MyCafe_Backend.DAL.Repositories
             {
                 while (await reader.ReadAsync())
                 {
-                    cafes.Add(new CafeVM
+                    CafeVM cafe = new CafeVM();
+                    cafe.Id = reader.GetInt32("id");
+                    cafe.Name = reader.GetString("name");
+                    cafe.Location = reader.GetString("location");
+                    cafe.Description = reader.GetString("description");
+                    cafe.Employees = reader.GetInt32("employees");
+                    if (!reader.IsDBNull(reader.GetOrdinal("logo")))
                     {
-                        Id = reader.GetInt32("id"),
-                        Name = reader.GetString("name"),
-                        Location = reader.GetString("location"),
-                        Description = reader.GetString("description"),
-                        Logo = reader.GetString("logo"),
-                        Employees = reader.GetInt32("employees")
-                    });
+                        long logoSize = reader.GetBytes(reader.GetOrdinal("logo"), 0, null, 0, 0);
+                        byte[] logoData = new byte[logoSize];
+                        reader.GetBytes(reader.GetOrdinal("logo"), 0, logoData, 0, (int)logoSize);
+                        //cafe.Logo = Convert.ToBase64String(logoData);
+                        cafe.Logo = Encoding.UTF8.GetString(logoData);
+                    }
+                    cafes.Add(cafe);
                 }
             }
 
@@ -123,8 +147,28 @@ namespace MyCafe_Backend.DAL.Repositories
             //command.Parameters.AddWithValue("@id", cafe.Id);
             command.Parameters.AddWithValue("@name", cafe.Name);
             command.Parameters.AddWithValue("@location", cafe.Location);
-            command.Parameters.AddWithValue("@logo", cafe.Logo);
             command.Parameters.AddWithValue("@description", cafe.Description);
+
+            if (!String.IsNullOrEmpty(cafe.Logo) && IsBase64String(cafe.Logo))
+            {
+                try
+                {
+                    string base64String = cafe.Logo.Trim();
+                    // Remove line breaks and carriage returns
+                    base64String = base64String.Replace("\n", string.Empty).Replace("\r", string.Empty);
+                    byte[] logoBytes = Encoding.UTF8.GetBytes(base64String);
+                    command.Parameters.AddWithValue("@logo", logoBytes);
+
+                }
+                catch (Exception ex)
+                {
+                    throw new ArgumentException("Exception message :" + ex.Message);
+                }
+            }
+            else
+            {
+                command.Parameters.AddWithValue("@logo", null);
+            }
 
             int rowsAffected = await command.ExecuteNonQueryAsync();
 
@@ -150,7 +194,35 @@ namespace MyCafe_Backend.DAL.Repositories
             command.Parameters.AddWithValue("@id", cafe.Id);
             command.Parameters.AddWithValue("@name", cafe.Name);
             command.Parameters.AddWithValue("@location", cafe.Location);
-            command.Parameters.AddWithValue("@logo", cafe.Logo);
+
+            if(!String.IsNullOrEmpty(cafe.Logo) && IsBase64String(cafe.Logo))
+            {
+                try
+                {
+                    string base64String = cafe.Logo.Trim();
+                    // Remove line breaks and carriage returns
+                    base64String = base64String.Replace("\n", string.Empty).Replace("\r", string.Empty);
+                    //string base64Pattern = @"[^a-zA-Z0-9+/=]";
+                    //string sanitizedString = Regex.Replace(base64String, base64Pattern, string.Empty);
+
+                    // Convert the base64 string back to a byte array
+                    //byte[] logoBytes = Convert.FromBase64String(sanitizedString);
+
+                    byte[] logoBytes = Encoding.UTF8.GetBytes(base64String);
+                    command.Parameters.AddWithValue("@logo", logoBytes);
+
+                    
+                }
+                catch (Exception ex)
+                {
+                    throw new ArgumentException("Exception message :" + ex.Message);
+                }
+            }
+            else
+            {
+                command.Parameters.AddWithValue("@logo", null);
+            }
+           
             command.Parameters.AddWithValue("@description", cafe.Description);
 
             int rowsAffected = await command.ExecuteNonQueryAsync();
@@ -176,6 +248,17 @@ namespace MyCafe_Backend.DAL.Repositories
             await _connection.CloseAsync();
 
             return rowsAffected > 0;
+        }
+
+        public static bool IsBase64String(string input)
+        {
+            // Regular expression pattern for base64 encoding with prefix check
+            string base64Pattern = @"^(data:.*?;base64,)?[a-zA-Z0-9+/]*={0,2}$";
+
+            // Check if the input matches the base64 pattern
+            bool isBase64 = Regex.IsMatch(input, base64Pattern);
+
+            return isBase64;
         }
     }
 }

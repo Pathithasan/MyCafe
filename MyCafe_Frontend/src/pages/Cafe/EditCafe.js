@@ -1,19 +1,18 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormLabel, Grid, TextField, IconButton} from "@mui/material";
 import EditTwoTone from "@mui/icons-material/EditTwoTone";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useApiData } from "../../custom-hooks/useApiData";
 import { Context } from "../../context/store";
+import FileInput from "../../components/FileInput";
 
 const EditCafe = ({ cafeData }) => {
     let apiData = useApiData();
     const { state, dispatch } = useContext(Context);
     const [open, setOpen] = useState(false);
-   
-
-    const { register, handleSubmit, reset, errors } = useForm({
+    
+    const { control, register, handleSubmit, reset, errors, setValue } = useForm({
         defaultValues: useMemo(() => {
-            console.log("User has changed");
             return cafeData;
         }, [cafeData]),
     });
@@ -34,8 +33,10 @@ const EditCafe = ({ cafeData }) => {
             
         })
         .catch((error) => {
-            console.log(error);
-            alert(error);
+            
+            console.log('cafe error ' + state.error);
+            // alert(errorData);
+            alert(state.error);
         });
           console.log("updated------------->", update);
     }
@@ -48,7 +49,7 @@ const EditCafe = ({ cafeData }) => {
             <Dialog open={open} onClose={handleClose} fullWidth>
                 <DialogTitle>Edit Cafe</DialogTitle>
                 <DialogContent>
-                    <form id="formCafe" onSubmit={handleSubmit(onSubmit)} onReset={reset} noValidate autoComplete="off">
+                    <form encType="multipart/form-data" id="formCafe" onSubmit={handleSubmit(onSubmit)} onReset={reset} noValidate autoComplete="off">
                         <TextField
                             variant="outlined"
                             margin="normal"
@@ -80,25 +81,20 @@ const EditCafe = ({ cafeData }) => {
                             required
                             fullWidth
                             id=""
-                            label="Logo"
-                            name="logo"
-                            autoComplete="logo"
-                            autoFocus
-                            {...register("logo")}
-                        />
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id=""
                             label="Location"
                             name="location"
                             autoComplete="location"
                             autoFocus
                             {...register("location")}
                         />
-                        
+                       <FileInput
+                            name="logo"
+                            control={control}
+                            label="Logo"
+                            onFileSelect={(file) => setValue("logo", file)}
+                            accept="image/*"
+                            defaultValue={cafeData["logo"]}
+                        />
                         <Grid display={"flex"} justifyContent={"space-between"} mt={2} mb={1}>
                             <Button type="button" variant="contained" color="secondary" onClick={handleClose}>
                                 Cancel

@@ -83,7 +83,17 @@ export const useApiData = () => {
         });
     },
     updateCafe: (id, data) => {
-        console.log("update data------>", data);
+        console.log("update data logo------>", data.logo);
+        //console.log("update data logo length------>", data.logo.length);
+        // const encoder = new TextEncoder();
+        // const utf8Bytes = encoder.encode(data.logo);
+
+        // console.log("update data logo byte------>", utf8Bytes);  
+        
+        // const decoder = new TextDecoder();
+        // const str = decoder.decode(utf8Bytes);
+        // console.log("update data logo str------>", str);            
+            
         return new Promise((resolve, reject) => {
           axios
             .put(
@@ -93,6 +103,7 @@ export const useApiData = () => {
                 name: data.name,
                 description: data.description,
                 logo: data.logo,
+                // log: logoArray,
                 location: data.location,
               },
               {

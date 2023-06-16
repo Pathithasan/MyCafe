@@ -3,14 +3,15 @@ import { useContext, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useApiData } from "../../custom-hooks/useApiData";
 import { Context } from "../../context/store";
-  
+import FileInput from "../../components/FileInput";
+
   const CreateCafe = () => {
     let apiData = useApiData();
     const { state, dispatch } = useContext(Context);
     const [open, setOpen] = useState(false);
   
     // const { register, handleSubmit, reset, errors } = useForm();
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, formState: { errors } , setValue, control} = useForm();
     const handleClickOpen = () => {
       setOpen(true);
     };
@@ -38,7 +39,7 @@ import { Context } from "../../context/store";
          <Button type="button" variant="contained" color="primary" onClick={handleClickOpen}>Create</Button>
             
             <Dialog open={open} onClose={handleClose} fullWidth>
-                <DialogTitle>Add Nee Cafe</DialogTitle>
+                <DialogTitle>Add New Cafe</DialogTitle>
                 <DialogContent>
                 <DialogContentText>Please enter the details of the new cafe:</DialogContentText>
                     <form id="formCafe" onSubmit={handleSubmit(onSubmit)} onReset={reset} noValidate autoComplete="off">
@@ -72,23 +73,19 @@ import { Context } from "../../context/store";
                             required
                             fullWidth
                             id=""
-                            label="Logo"
-                            autoComplete="logo"
-                            autoFocus
-                            {...register("logo")}
-                        />
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id=""
                             label="Location"
                             name="location"
                             autoComplete="location"
                             autoFocus
                             placeholder={"Crawford Ln, #01-63, Singapore"}
                             {...register("location")}
+                        />
+                        <FileInput
+                            name="logo"
+                            control={control}
+                            label="Logo"
+                            onFileSelect={(file) => setValue("logo", file)}
+                            accept="image/*"
                         />
                         
                         <Grid display={"flex"} justifyContent={"space-between"} mt={2} mb={1}>
